@@ -39,9 +39,14 @@
             <h3 class="text-xs font-extrabold text-[#002C6C] flex items-center gap-1">
               <i class="fa-solid fa-list"></i> 개선요청 목록
             </h3>
-            <button onclick="openInquiryWriteModal()" class="text-[11px] bg-[#002C6C] text-white px-2.5 py-1 rounded-lg font-bold hover:bg-blue-900 transition">
-              <i class="fa-solid fa-pen-to-square mr-1"></i> 글쓰기
-            </button>
+            <div class="flex items-center gap-1">
+              <button onclick="openInquiryWriteModal()" class="text-[11px] bg-[#002C6C] text-white px-2.5 py-1 rounded-lg font-bold hover:bg-blue-900 transition">
+                <i class="fa-solid fa-pen-to-square mr-1"></i> 글쓰기
+              </button>
+              <button onclick="toggleInquiryMenu()" class="text-[11px] bg-slate-200 text-slate-700 px-2 py-1 rounded-lg font-bold hover:bg-slate-300 transition">
+                <i class="fa-solid fa-xmark"></i> 닫기
+              </button>
+            </div>
           </div>
           <!-- 게시물 리스트 영역 -->
           <div id="inquiry-list-container" class="max-h-60 overflow-y-auto space-y-2 text-xs">
@@ -66,7 +71,6 @@
 
     <!-- Navigation Tabs -->
     <div class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 border-2 border-[#002C6C] mb-6 bg-slate-100 rounded-xl shadow-md p-1 gap-1 text-xs font-bold">
-      <!-- PDF 병합 탭 아이콘 색상 수정 (기본 비활성화 상태이므로 text-[#002C6C] 적용) -->
       <button id="tab-merge" onclick="switchTab('merge')" class="py-2.5 px-1 text-center rounded-lg bg-white text-slate-800 hover:bg-slate-200 flex flex-col sm:flex-row items-center justify-center gap-1 transition-all">
         <i class="fa-solid fa-layer-group text-[#002C6C]"></i>
         <span>PDF 병합</span>
@@ -201,7 +205,7 @@
             <i class="fa-solid fa-stamp"></i> 워터마크 삽입 & 드래그 위치 조정
           </h2>
           <button onclick="loadSamplePDFs('watermark')" class="text-xs bg-indigo-100 text-[#002C6C] px-3 py-1.5 rounded-lg hover:bg-indigo-200 font-bold transition">
-            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> 샘플 PDF 생성
+            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> 샘플 PDF 생성 (1장)
           </button>
         </div>
         
@@ -278,9 +282,8 @@
             <input type="file" id="input-redact-pdf" accept="application/pdf" class="w-full text-xs p-2.5 border rounded-lg bg-slate-50">
           </div>
           <div>
-            <!-- 안내 문구 수정: 입력한 키워드 영역만 마스킹 처리 -->
             <label class="block text-xs font-bold text-slate-700 mb-1">마스킹할 키워드 또는 패턴 (콤마로 구분)</label>
-            <input type="text" id="redact-keywords" value="주민번호, 계좌번호" class="w-full text-sm p-2 border rounded-lg">
+            <input type="text" id="redact-keywords" value="마스킹할 정보 등" class="w-full text-sm p-2 border rounded-lg">
             <p class="text-[11px] text-slate-500 mt-1">※ 입력된 키워드 또는 패턴에 해당하는 영역만 정밀하게 마스킹(블랙박스) 처리됩니다.</p>
           </div>
           <div class="flex items-center gap-2">
@@ -332,7 +335,7 @@
             <i class="fa-solid fa-file-invoice"></i> OCR 스캔 문서 인식 및 검색 가능 PDF 변환
           </h2>
           <button onclick="loadSamplePDFs('ocr')" class="text-xs bg-indigo-100 text-[#002C6C] px-3 py-1.5 rounded-lg hover:bg-indigo-200 font-bold transition">
-            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> 샘플 PDF 생성
+            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> 샘플 PDF 생성 (1장)
           </button>
         </div>
         <div class="space-y-4 bg-white p-5 rounded-xl border border-slate-300">
@@ -415,7 +418,7 @@
             <p class="text-xs text-slate-600 mt-1 font-medium">Acrobat Reader DC, Chrome, Edge, Whale 전체 호환 표준 암호를 설정합니다.</p>
           </div>
           <button onclick="loadSamplePDFs('security')" class="text-xs bg-indigo-100 text-[#002C6C] px-3 py-1.5 rounded-lg hover:bg-indigo-200 font-bold transition">
-            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> 샘플 PDF 생성 (2장)
+            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> 샘플 PDF 생성 (1장)
           </button>
         </div>
 
@@ -525,7 +528,7 @@
     // --- PDF.js Worker Setup ---
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-    // --- Tab Switching (비활성화 탭 아이콘 색상 네이비 #002C6C 적용) ---
+    // --- Tab Switching ---
     function switchTab(activeTab) {
       const tabs = ['merge', 'edit', 'watermark', 'redaction', 'diff', 'ocr', 'convert', 'security', 'spell'];
       tabs.forEach(tab => {
@@ -629,6 +632,20 @@
           document.getElementById('input-redact-pdf').files = dataTransfer.files;
           document.getElementById('redact-keywords').value = '주민번호, 계좌번호';
 
+        } else if (targetContext === 'security') {
+          // 보안/암호화 기능 샘플 PDF 생성 (1장만 생성되도록 수정)
+          const docSec = await PDFDocument.create();
+          docSec.registerFontkit(fontkit);
+          const customFontSec = await docSec.embedFont(fontBytes);
+          
+          const p1 = docSec.addPage([400, 600]);
+          p1.drawText('Sample Security Document - Page 1 (비밀번호 보호 대상)', { x: 40, y: 520, size: 10, font: customFontSec, color: rgb(0, 0, 0) });
+
+          const sampleFile = new File([await docSec.save()], 'Sample_Security_1Page.pdf', { type: 'application/pdf' });
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(sampleFile);
+          document.getElementById('input-sec-pdf').files = dataTransfer.files;
+
         } else {
           const docCommon = await PDFDocument.create();
           docCommon.registerFontkit(fontkit);
@@ -667,10 +684,6 @@
             const dataTransfer = new DataTransfer();
             dataTransfer.items.add(sampleFile);
             document.getElementById('input-pdf-to-img').files = dataTransfer.files;
-          } else if (targetContext === 'security') {
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(sampleFile);
-            document.getElementById('input-sec-pdf').files = dataTransfer.files;
           }
         }
       } catch (e) {
@@ -1024,7 +1037,7 @@
       }
     }
 
-    // --- Redaction Logic (작성한 키워드 영역만 마스킹하도록 변경) ---
+    // --- Redaction Logic ---
     async function processRedaction() {
       const fileInput = document.getElementById('input-redact-pdf');
       const keywords = document.getElementById('redact-keywords').value.split(',').map(s => s.trim()).filter(Boolean);
@@ -1063,8 +1076,6 @@
 
           textContent.items.forEach(item => {
             const textStr = item.str;
-            
-            // 입력된 키워드 중 하나라도 포함되는 텍스트 아이템인 경우 해당 영역만 마스킹(블랙박스) 처리
             const matched = keywords.some(kw => textStr.includes(kw));
 
             if (matched && textStr.trim().length > 0) {
@@ -1078,7 +1089,7 @@
                 y: ty - 2,
                 width: width + 4,
                 height: itemHeight + 4,
-                color: rgb(0, 0, 0), // 검정색 마스킹 박스
+                color: rgb(0, 0, 0),
               });
             }
           });
@@ -1589,7 +1600,7 @@
       navigator.clipboard.writeText(text).then(() => alert('클립보드에 복사되었습니다.'));
     }
 
-    // --- Inquiry Board System (개선요청 기능) ---
+    // --- Inquiry Board System ---
     let inquiries = JSON.parse(localStorage.getItem('bai_inquiries') || '[]');
     const ADMIN_PASSWORD = '!!!!!';
 
@@ -1611,7 +1622,7 @@
       container.innerHTML = inquiries.map((item, index) => `
         <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 shadow-2xs space-y-1">
           <div class="flex justify-between items-center font-bold text-slate-800">
-            <span>${escapeHTML(item.author)}</span>
+            <span class="text-indigo-900 font-extrabold"><i class="fa-solid fa-user text-[10px] mr-1"></i>${escapeHTML(item.author)}</span>
             <span class="text-[10px] text-slate-400">${item.date}</span>
           </div>
           <p class="text-slate-600 whitespace-pre-wrap">${escapeHTML(item.content)}</p>
