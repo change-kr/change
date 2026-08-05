@@ -638,7 +638,7 @@
           const dataTransfer = new DataTransfer();
           dataTransfer.items.add(sampleFile);
           document.getElementById('input-redact-pdf').files = dataTransfer.files;
-          document.getElementById('redact-keywords').value = '주 민 번 호, 계 좌 번 호';
+          document.getElementById('redact-keywords').value = '주민번호, 계좌번호';
 
         } else if (targetContext === 'security') {
           const docSec = await PDFDocument.create();
