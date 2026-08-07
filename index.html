@@ -2119,7 +2119,7 @@
 
     function loadSampleText() {
       document.getElementById('spell-input').value = "안녕하세요. 요청하신 감사 서류 작성이 완료 되었습다. 확인 부탁 드립니다. 빠르게 검토할수 있도록 조치 하겠습니다. 몇일 동안 고생 많으셨습니다.";
-      analyzeText();
+      <!-- analyzeText(); -->
     }
 
     function analyzeText() {
@@ -2482,7 +2482,7 @@ ${matchedCategory.rules.map(r => `   - ${r}`).join('\n')}
         return;
       }
 
-      document.getElementById('text-preview').textContent = 'Gemini 3.5 Flash AI가 오타와 띄어쓰기를 정밀 검사 중입니다...';
+      document.getElementById('text-preview').textContent = 'AI가 오타와 띄어쓰기를 정밀 검사 중입니다.';
       
       try {
         const prompt = `다음 텍스트의 맞춤법, 띄어쓰기, 어색한 문장을 교정해주세요.
