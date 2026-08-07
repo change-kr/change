@@ -2426,6 +2426,42 @@ ${matchedCategory.rules.map(r => `   - ${r}`).join('\n')}
       }
     }
 
+        // ==========================================
+    // [신규 개선] Gemini 3.5 Flash 우선 적용 및 다단계 폴백 연동 함수 (요청하신 상세 에러 처리 포함)
+    // ==========================================
+    async function callGeminiAPI(apiKey, promptText, preferredModel = "gemini-3.5-flash") {
+      const modelsToTry = [preferredModel, "gemini-3.5-flash", "gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
+      let lastErrorMessage = "";
+
+      for (const modelName of modelsToTry) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: promptText }] }]
+            })
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+              return data.candidates[0].content.parts[0].text;
+            }
+          } else {
+            const errData = await response.json().catch(() => ({}));
+            lastErrorMessage = errData.error?.message || `HTTP Error status: ${response.status}`;
+          }
+        } catch (err) {
+          lastErrorMessage = err.message;
+        }
+      }
+
+      // 요청하신 상세 에러 메시지 포맷 반영
+      throw new Error(`오류 발생: 요청하신 모델을 사용할 수 없습니다. 최신 모델을 확인해주세요. (상세: API key not valid. Please pass a valid API key. / models/gemini-1.5-pro is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods. / ${lastErrorMessage})`);
+    }
+
         // --- 오타 검사(AI 연동) 로직 ---
     function updateCharCount() {
       const text = document.getElementById('spell-input').value;
