@@ -313,14 +313,14 @@
           </div>
            <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">마스킹할 키워드 또는 패턴 (콤마로 구분)</label>
-            <input type="text" id="redact-keywords" value="주 민 번 호, 계 좌 번 호" class="w-full text-sm p-2 border rounded-lg">
+            <input type="text" id="redact-keywords" value="주민번호, 계좌번호" class="w-full text-sm p-2 border rounded-lg">
             <p class="text-[11px] text-slate-500 mt-1">※ 입력된 키워드 또는 패턴에 해당하는 영역만 정밀하게 마스킹(블랙박스) 처리됩니다. (작성된 건만 무조건 처리)</p>
             <div class="mt-2 p-3 bg-indigo-50/70 border border-indigo-100 rounded-lg text-xs text-slate-700 space-y-1">
               <span class="font-bold text-[#002C6C] block"><i class="fa-solid fa-circle-info mr-1"></i> 마스킹 키워드/패턴 입력 예시 안내</span>
               <ul class="list-disc list-inside space-y-0.5 text-[11px] text-slate-600">
-                <li><strong>일반 단어/문구형:</strong> <code class="bg-white px-1 py-0.5 rounded border">대 외 비, 참고용, 홍길동</code></li>
+                <li><strong>일반 단어/문구형:</strong> <code class="bg-white px-1 py-0.5 rounded border">대외비, 참고용, 홍길동</code></li>
                 <li><strong>번호/특수문자형:</strong> <code class="bg-white px-1 py-0.5 rounded border">900101-1234567, 110-234-567890</code></li>
-                <li><strong>복수 지정형 (콤마 구분):</strong> <code class="bg-white px-1 py-0.5 rounded border">주 민 번 호, 계 좌 번 호, 비 밀</code></li>
+                <li><strong>복수 지정형 (콤마 구분):</strong> <code class="bg-white px-1 py-0.5 rounded border">주민번호, 계좌번호, 비밀</code></li>
               </ul>
             </div>
           </div>
@@ -882,14 +882,14 @@
           
           const rp1 = docRedact.addPage([400, 600]);
           rp1.drawText('개인정보 검토 문서', { x: 40, y: 540, size: 16, font: customFontRedact, color: rgb(0, 0, 0) });
-          rp1.drawText('주 민 번 호 : 900101-1234567', { x: 40, y: 490, size: 12, font: customFontRedact, color: rgb(0.2, 0.2, 0.2) });
-          rp1.drawText('계 좌 번 호 : 110-234-567890 (우리)', { x: 40, y: 450, size: 12, font: customFontRedact, color: rgb(0.2, 0.2, 0.2) });
+          rp1.drawText('주민번호 : 900101-1234567', { x: 40, y: 490, size: 12, font: customFontRedact, color: rgb(0.2, 0.2, 0.2) });
+          rp1.drawText('계좌번호 : 110-234-567890 (우리)', { x: 40, y: 450, size: 12, font: customFontRedact, color: rgb(0.2, 0.2, 0.2) });
 
           const sampleFile = new File([await docRedact.save()], 'Sample_Redaction_Document.pdf', { type: 'application/pdf' });
           const dataTransfer = new DataTransfer();
           dataTransfer.items.add(sampleFile);
           document.getElementById('input-redact-pdf').files = dataTransfer.files;
-          document.getElementById('redact-keywords').value = '주 민 번 호, 계 좌 번 호';
+          document.getElementById('redact-keywords').value = '주민번호, 계좌번호';
 
         } else if (targetContext === 'security') {
           const docSec = await PDFDocument.create();
