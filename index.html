@@ -37,10 +37,11 @@
     <!-- Header -->
     <header class="mb-6 text-center border-b border-slate-300 pb-6 relative">
       <!-- 우측 상단 개선요청 아이콘 및 드롭다운 메뉴 -->
+      <!-- 눈에 띄게 변경된 개선요청 버튼 영역 -->
       <div class="absolute right-0 top-0 inline-block text-left">
-        <button onclick="toggleInquiryMenu()" class="bg-slate-100 hover:bg-slate-200 text-[#002C6C] border border-slate-300 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition">
-          <i class="fa-solid fa-comment-dots text-sm"></i>
-          <span>개선요청</span>
+        <button onclick="toggleInquiryMenu()" class="bg-[#002C6C] hover:bg-blue-900 text-white border-2 border-yellow-400 px-4 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-2 shadow-lg animate-pulse transition transform hover:scale-105">
+          <i class="fa-solid fa-comment-dots text-sm text-yellow-300"></i>
+          <span>✨ 개선요청 (클릭)</span>
         </button>
         <!-- 개선요청 드롭다운 리스트 박스 -->
         <div id="inquiry-dropdown" class="hidden absolute right-0 mt-2 w-72 sm:w-80 bg-white border border-slate-300 rounded-xl shadow-xl z-50 p-4 text-left">
