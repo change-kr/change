@@ -127,15 +127,15 @@
       </button>
       <button id="tab-aisummary" onclick="switchTab('aisummary')" class="py-2.5 px-1 text-center text-slate-800 hover:bg-slate-200 rounded-lg flex flex-col sm:flex-row items-center justify-center gap-1 transition-all">
         <i class="fa-solid fa-brain text-[#002C6C]"></i>
-        <span>AI문서요약(Beta)</span>
+        <span>AI 문서요약(Beta)</span>
       </button>
       <button id="tab-spell" onclick="switchTab('spell')" class="py-2.5 px-1 text-center text-slate-800 hover:bg-slate-200 rounded-lg flex flex-col sm:flex-row items-center justify-center gap-1 transition-all">
         <i class="fa-solid fa-spell-check text-[#002C6C]"></i>
-        <span>오타 검사(Beta)</span>
+        <span>AI 오타 검사(Beta)</span>
       </button>
       <button id="tab-vibe" onclick="switchTab('vibe')" class="py-2.5 px-1 text-center text-slate-800 hover:bg-slate-200 rounded-lg flex flex-col sm:flex-row items-center justify-center gap-1 transition-all">
         <i class="fa-solid fa-wand-magic-sparkles text-[#002C6C]"></i>
-        <span>프롬프트 교정(Beta)</span>
+        <span>AI 프롬프트 교정(Beta)</span>
       </button>
     </div>
 
@@ -633,12 +633,12 @@
       </div>
     </div>
 
-    <!-- TAB 9: Spell Checker -->
+    <!-- TAB 9: Spell Checker (Gemini 3.5 Flash 연동 적용) -->
     <div id="content-spell" class="space-y-6 hidden">
       <div class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md border-2 border-[#002C6C]">
         <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-3">
           <h2 class="text-lg font-extrabold text-[#002C6C] flex items-center gap-2">
-            <i class="fa-solid fa-file-pen"></i> 문서 업로드 또는 문장 직접 입력
+            <i class="fa-solid fa-spell-check"></i> AI 맞춤법 및 오타 검사 (Gemini 3.5 Flash 연동)
           </h2>
           <button onclick="loadSampleText()" class="text-xs bg-indigo-100 text-[#002C6C] px-3 py-1.5 rounded-lg hover:bg-indigo-200 font-bold transition">
             <i class="fa-solid fa-lightbulb mr-1"></i> 예시 문장
@@ -646,22 +646,34 @@
         </div>
 
         <div class="mb-4 bg-white p-4 rounded-xl border border-slate-300 shadow-xs">
-          <label class="block text-xs font-bold text-slate-700 mb-2 flex items-center gap-1.5">
-            <i class="fa-solid fa-file-arrow-up text-[#002C6C]"></i> 문서 파일 첨부 (한글 HWP/HWPX, 워드 DOCX, 텍스트 TXT)
-          </label>
-          <input type="file" id="spell-file-input" accept=".txt,.docx,.hwp,.hwpx" onchange="handleSpellFileLoad(event)" class="w-full text-xs p-2 border rounded-lg bg-slate-50">
-          <p class="text-[11px] text-slate-500 mt-1">파일을 첨부하면 내부 텍스트가 자동으로 추출되어 아래 입력창에 채워집니다.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Gemini API Key 입력</label>
+              <input type="password" id="spell-api-key" placeholder="API Key 입력" class="w-full text-xs p-2 border rounded-lg bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-2 flex items-center gap-1.5">
+              <i class="fa-solid fa-file-arrow-up text-[#002C6C]"></i> 문서 파일 첨부 (한글 HWP/HWPX, 워드 DOCX, 텍스트 TXT)
+              </label>
+              <input type="file" id="spell-file-input" accept=".txt,.docx,.hwp,.hwpx" onchange="handleSpellFileLoad(event)" class="w-full text-xs p-2 border rounded-lg bg-slate-50">
+              <p class="text-[11px] text-slate-500 mt-1">파일을 첨부하면 내부 텍스트가 자동으로 추출되어 아래 입력창에 채워집니다.</p>
+            </div>
+          </div>
         </div>
 
         <div class="relative mb-4">
           <textarea id="spell-input" rows="5" oninput="analyzeText()" placeholder="검사할 문장을 입력하거나 파일을 첨부하세요..." class="w-full p-4 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#002C6C] text-slate-800 text-sm leading-relaxed resize-none shadow-xs"></textarea>
           <div id="char-count" class="absolute bottom-3 right-3 text-xs text-slate-500 font-bold">0자</div>
         </div>
+        
+        <button onclick="runAISpellCheck()" class="w-full bg-[#002C6C] hover:bg-blue-900 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 mb-4">
+          <i class="fa-solid fa-sparkles"></i> <span>Gemini 3.5 Flash 오타 및 띄어쓰기 검사 실행</span>
+        </button>
 
         <div class="border-t border-slate-200 pt-4">
           <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-              <span>감지된 교정 항목</span>
+              <span>감지된 교정 항목 및 결과</span>
               <span id="issue-badge" class="bg-[#002C6C] text-white text-xs px-2 py-0.5 rounded-full font-extrabold">0건</span>
             </h3>
             <button onclick="copyCorrectedText()" class="text-xs bg-slate-800 text-white px-3 py-1.5 rounded-lg hover:bg-slate-700 font-bold transition flex items-center gap-1">
@@ -670,30 +682,32 @@
           </div>
 
           <div id="issue-chips" class="flex flex-wrap gap-2 mb-4 min-h-[40px] items-center p-3 bg-white rounded-xl border border-slate-300 shadow-xs">
-            <span class="text-xs text-slate-500 font-medium">감지된 오타나 띄어쓰기 오류가 표시됩니다.</span>
+            <span class="text-xs text-slate-500 font-medium">AI 검사 실행 시 감지된 오타와 교정 제안이 표시됩니다.</span>
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">실시간 교정 결과 미리보기</label>
-            <div id="text-preview" class="p-4 bg-white rounded-xl border border-slate-300 text-sm text-slate-800 min-h-[80px] leading-relaxed whitespace-pre-wrap shadow-xs"></div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">AI 교정 결과 전문</label>
+            <div id="text-preview" class="p-4 bg-white rounded-xl border border-slate-300 text-sm text-slate-800 min-h-[80px] leading-relaxed whitespace-pre-wrap shadow-xs">교정 결과가 여기에 표시됩니다.</div>
           </div>
         </div>
       </div>
     </div>
 
-
-    <!-- TAB 10: 바이브코딩 초보자를 위한 프롬프트 교정 메뉴 -->
+    <!-- TAB 10: 프롬프트 교정 메뉴 (Gemini 3.5 Flash 연동 적용) -->
     <div id="content-vibe" class="space-y-6 hidden">
       <div class="bg-white/95 backdrop-blur p-6 rounded-xl shadow-md border-2 border-[#002C6C]">
         <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-3">
           <h2 class="text-lg font-extrabold text-[#002C6C] flex items-center gap-2">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> 바이브코딩 초보자 프롬프트 추천 교정기
+            <i class="fa-solid fa-wand-magic-sparkles"></i> 바이브코딩 초보자 프롬프트 추천 교정기 (Gemini 3.5 Flash 연동)
           </h2>
-          <div class="flex items-center gap-2">
-            <button onclick="loadSamplePrompt()" class="text-xs bg-indigo-100 text-[#002C6C] px-3 py-1.5 rounded-lg hover:bg-indigo-200 font-bold transition">
-              <i class="fa-solid fa-lightbulb mr-1"></i> 예시 입력해보기
-            </button>
-          </div>
+          <button onclick="loadSamplePrompt()" class="text-xs bg-indigo-100 text-[#002C6C] px-3 py-1.5 rounded-lg hover:bg-indigo-200 font-bold transition">
+            <i class="fa-solid fa-lightbulb mr-1"></i> 예시 입력해보기
+          </button>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-xs font-bold text-slate-700 mb-1">Gemini API Key 입력</label>
+          <input type="password" id="vibe-api-key" placeholder="API Key 입력" class="w-full text-xs p-2 border rounded-lg bg-white">
         </div>
 
         <p class="text-xs text-slate-600 mb-4 font-medium">
@@ -2434,6 +2448,272 @@ ${matchedCategory.rules.map(r => `   - ${r}`).join('\n')}
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }
+    
+
+        // ==========================================
+    // [신규 개선] Gemini 3.5 Flash 우선 적용 및 다단계 폴백 연동 함수 (요청하신 상세 에러 처리 포함)
+    // ==========================================
+    async function callGeminiAPI(apiKey, promptText, preferredModel = "gemini-3.5-flash") {
+      const modelsToTry = [preferredModel, "gemini-3.5-flash", "gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
+      let lastErrorMessage = "";
+
+      for (const modelName of modelsToTry) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: promptText }] }]
+            })
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+              return data.candidates[0].content.parts[0].text;
+            }
+          } else {
+            const errData = await response.json().catch(() => ({}));
+            lastErrorMessage = errData.error?.message || `HTTP Error status: ${response.status}`;
+          }
+        } catch (err) {
+          lastErrorMessage = err.message;
+        }
+      }
+
+      // 요청하신 상세 에러 메시지 포맷 반영
+      throw new Error(`오류 발생: 요청하신 모델을 사용할 수 없습니다. 최신 모델을 확인해주세요. (상세: API key not valid. Please pass a valid API key. / models/gemini-1.5-pro is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods. / ${lastErrorMessage})`);
+    }
+
+    // --- 오타 검사(AI 연동) 로직 ---
+    function updateCharCount() {
+      const text = document.getElementById('spell-input').value;
+      document.getElementById('char-count').textContent = text.length + '자';
+    }
+
+    async function runAISpellCheck() {
+      const apiKey = document.getElementById('spell-api-key').value.trim();
+      const text = document.getElementById('spell-input').value.trim();
+
+      if (!apiKey) {
+        alert('Gemini API Key를 입력해주세요.');
+        return;
+      }
+      if (!text) {
+        alert('검사할 문장을 입력하거나 파일을 첨부해주세요.');
+        return;
+      }
+
+      document.getElementById('text-preview').textContent = 'Gemini 3.5 Flash AI가 오타와 띄어쓰기를 정밀 검사 중입니다...';
+      
+      try {
+        const prompt = `다음 텍스트의 맞춤법, 띄어쓰기, 어색한 문장을 교정해주세요.
+반드시 아래 형식으로 JSON이 아닌 깔끔한 텍스트 형태로 답변해주세요:
+1. 교정된 전체 문장
+2. 주요 수정 내역 요약 (건수 포함)
+
+[검사 대상 텍스트]
+${text}`;
+
+        const resultText = await callGeminiAPI(apiKey, prompt, "gemini-3.5-flash");
+        document.getElementById('text-preview').textContent = resultText;
+        document.getElementById('issue-badge').textContent = 'AI 검사완료';
+        document.getElementById('issue-chips').innerHTML = `<span class="text-xs text-emerald-700 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Gemini 3.5 Flash 맞춤법 교정이 완료되었습니다.</span>`;
+      } catch (error) {
+        alert(error.message);
+        document.getElementById('text-preview').textContent = error.message;
+      }
+    }
+
+    function handleSpellFileLoad(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        document.getElementById('spell-input').value = evt.target.result;
+        updateCharCount();
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+
+    function copyCorrectedText() {
+      const text = document.getElementById('text-preview').textContent;
+      navigator.clipboard.writeText(text).then(() => alert('교정 결과가 클립보드에 복사되었습니다.'));
+    }
+
+    // --- 프롬프트 교정(AI 연동) 로직 ---
+    async function refinePromptWithAI() {
+      const apiKey = document.getElementById('vibe-api-key').value.trim();
+      const inputPrompt = document.getElementById('vibe-input').value.trim();
+
+      if (!apiKey) {
+        alert('Gemini API Key를 입력해주세요.');
+        return;
+      }
+      if (!inputPrompt) {
+        alert('교정할 초보자용 프롬프트를 입력해주세요.');
+        return;
+      }
+
+      document.getElementById('vibe-output').textContent = 'Gemini 3.5 Flash AI가 고품질 프롬프트를 설계 중입니다...';
+
+      try {
+        const prompt = `사용자가 작성한 간단하고 막연한 프롬프트를 바이브코딩(AI 활용 개발/작업)에 적합한 전문가 수준의 구체적이고 체계적인 고품질 프롬프트로 재작성(Refine)해주세요. 목적, 역할(Persona), 제약조건, 출력 형식을 포함하여 마크다운 형태로 작성해주세요.
+
+[사용자 입력 프롬프트]
+${inputPrompt}`;
+
+        const refinedText = await callGeminiAPI(apiKey, prompt, "gemini-3.5-flash");
+        document.getElementById('vibe-output').textContent = refinedText;
+      } catch (error) {
+        alert(error.message);
+        document.getElementById('vibe-output').textContent = error.message;
+      }
+    }
+
+    function copyRefinedPrompt() {
+      const text = document.getElementById('vibe-output').textContent;
+      navigator.clipboard.writeText(text).then(() => alert('추천 프롬프트가 클립보드에 복사되었습니다.'));
+    }
+
+    // --- AI 문서 요약 로직 ---
+    async function runAISummary() {
+      const apiKey = document.getElementById('gemini-api-key').value.trim();
+      const modelSelect = document.getElementById('gemini-model-select').value;
+      
+      if (!apiKey) {
+        alert('Gemini API Key를 입력해주세요.');
+        return;
+      }
+
+      const fileInput = document.getElementById('input-summary-file');
+      if (fileInput.files.length === 0) {
+        alert('요약할 대상 문서 파일을 선택해주세요.');
+        return;
+      }
+
+      document.getElementById('summary-result').value = 'AI가 문서를 분석하고 요약을 생성하는 중입니다...';
+
+      try {
+        const file = fileInput.files[0];
+        const textContent = await file.text();
+
+        const prompt = `다음 문서를 분석하여 핵심 내용을 간결하게 요약하고 주요 키워드들을 추출해주세요.
+[문서 내용]
+${textContent}`;
+
+        const summaryText = await callGeminiAPI(apiKey, prompt, modelSelect);
+        document.getElementById('summary-result').value = summaryText;
+        document.getElementById('keywords-result').innerHTML = `<span class="bg-indigo-100 text-[#002C6C] px-2.5 py-1 rounded-md text-xs font-bold">#문서분석완료</span>`;
+      } catch (error) {
+        alert(error.message);
+        document.getElementById('summary-result').value = error.message;
+      }
+    }
+
+    async function loadSampleText() {
+      document.getElementById('spell-input').value = '감사 업무 관련 샘플 문장입니다. 띄어쓰기가 틀린곳을 찾아주세요.';
+      updateCharCount();
+    }
+
+    async function loadSamplePrompt() {
+      document.getElementById('vibe-input').value = '로그인 화면 예쁘게 만들어줘';
+    }
+
+    async function loadSampleSummaryDoc() {
+      const sampleContent = "본 문서는 감사원 업무 효율성 향상을 위한 전자 문서 관리 시스템 구축 계획안입니다. AI 기반 요약 및 맞춤법 검사 기능을 통해 문서 작성 소요 시간을 대폭 단축할 수 있습니다.";
+      const sampleFile = new File([sampleContent], "sample_document.txt", { type: "text/plain" });
+      
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(sampleFile);
+      document.getElementById('input-summary-file').files = dataTransfer.files;
+      alert('샘플 텍스트 문서가 생성되었습니다. API Key 입력 후 요약을 실행해 보세요.');
+    }
+
+    // --- 공통 샘플 생성기 및 기존 기능 코드 유지 ---
+    async function loadSamplePDFs(targetContext) {
+      try {
+        const { PDFDocument, rgb } = PDFLib;
+        const fontUrl = 'https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/nanumgothic/NanumGothic-Bold.ttf';
+        const fontBytes = await fetch(fontUrl).then(res => res.arrayBuffer());
+
+        if (targetContext === 'merge') {
+          const docA = await PDFDocument.create();
+          docA.registerFontkit(fontkit);
+          const customFontA = await docA.embedFont(fontBytes);
+          const pA = docA.addPage([400, 600]);
+          pA.drawText('Sample Document - Page 1', { x: 40, y: 520, size: 14, font: customFontA, color: rgb(0, 0, 0) });
+          const fileA = new File([await docA.save()], 'Sample_Doc_A.pdf', { type: 'application/pdf' });
+
+          const docB = await PDFDocument.create();
+          docB.registerFontkit(fontkit);
+          const customFontB = await docB.embedFont(fontBytes);
+          const pB = docB.addPage([400, 600]);
+          pB.drawText('Sample Document - Page 2', { x: 40, y: 520, size: 14, font: customFontB, color: rgb(0.8, 0.15, 0.15) });
+          const fileB = new File([await docB.save()], 'Sample_Doc_B.pdf', { type: 'application/pdf' });
+
+          mergeFiles.a = fileA;
+          mergeFiles.b = fileB;
+          document.getElementById('name-pdf-a').textContent = fileA.name;
+          document.getElementById('name-pdf-b').textContent = fileB.name;
+          updateMergeUI();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    let mergeFiles = { a: null, b: null };
+    let mergeOrder = ['a', 'b'];
+
+    function handleMergeFileSelect(key, e) {
+      const file = e.target.files[0];
+      if (file) {
+        mergeFiles[key] = file;
+        document.getElementById(`name-pdf-${key}`).textContent = file.name;
+        updateMergeUI();
+      }
+    }
+
+    function swapMergeOrder() {
+      mergeOrder = [mergeOrder[1], mergeOrder[0]];
+      updateMergeUI();
+    }
+
+    function updateMergeUI() {
+      document.getElementById('order-text-1').textContent = mergeOrder[0] === 'a' ? (mergeFiles.a ? mergeFiles.a.name : 'PDF A') : (mergeFiles.b ? mergeFiles.b.name : 'PDF B');
+      document.getElementById('order-text-2').textContent = mergeOrder[1] === 'a' ? (mergeFiles.a ? mergeFiles.a.name : 'PDF A') : (mergeFiles.b ? mergeFiles.b.name : 'PDF B');
+      const btn = document.getElementById('btn-merge');
+      if (mergeFiles.a && mergeFiles.b) {
+        btn.disabled = false;
+        btn.className = "w-full bg-[#002C6C] hover:bg-blue-900 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer";
+      }
+    }
+
+    async function mergePDFs() {
+      if (!mergeFiles.a || !mergeFiles.b) return;
+      const { PDFDocument } = PDFLib;
+      const mergedPdf = await PDFDocument.create();
+      for (const key of mergeOrder) {
+        const bytes = await mergeFiles[key].arrayBuffer();
+        const doc = await PDFDocument.load(bytes);
+        const copied = await mergedPdf.copyPages(doc, doc.getPageIndices());
+        copied.forEach(p => mergedPdf.addPage(p));
+      }
+      downloadBlob(await mergedPdf.save(), 'merged_document.pdf', 'application/pdf');
+    }
+
+    function downloadBlob(bytes, filename, mimeType) {
+      const blob = new Blob([bytes], { type: mimeType });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    }
+
+
+    
   </script>
 </body>
 </html>
