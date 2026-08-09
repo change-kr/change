@@ -839,7 +839,7 @@
 
     function resetVisitorCount() {
       const pw = prompt("관리자 패스워드를 입력하세요:");
-      if (pw === "!!!!!") {
+      if (pw === "dktmzk") {
         const today = new Date().toISOString().slice(0, 10);
         const visitorData = { date: today, count: 0 };
         localStorage.setItem('visitor_counter_data', JSON.stringify(visitorData));
@@ -2368,7 +2368,7 @@ ${matchedCategory.rules.map(r => `   - ${r}`).join('\n')}
 
         // --- Inquiry Board System ---
     let inquiries = JSON.parse(localStorage.getItem('bai_inquiries') || '[]');
-    const ADMIN_PASSWORD = '!!!!!';
+    const ADMIN_PASSWORD = 'dktmzk';
 
     function toggleInquiryMenu() {
       const dropdown = document.getElementById('inquiry-dropdown');
