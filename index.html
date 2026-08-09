@@ -830,10 +830,6 @@
       } else {
         // 새로고침 시에도 계속 카운트가 올라가도록 수정
         visitorData.count = (visitorData.count || 0) + 1;
-       <!-- if (!sessionStorage.getItem('visited_today')) {
-          visitorData.count = (visitorData.count || 0) + 1;
-          sessionStorage.setItem('visited_today', 'true');
-        } -->
       }
       localStorage.setItem('visitor_counter_data', JSON.stringify(visitorData));
       const countEl = document.getElementById('visitor-count');
