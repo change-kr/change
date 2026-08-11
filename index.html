@@ -569,7 +569,6 @@
                </a>
               </div>
               <input type="password" id="gemini-api-key" placeholder="AI 연동을 위한 API Key를 입력하세요" class="w-full text-sm p-2.5 border rounded-lg bg-white">
-              <!-- 테스트용 <input type="password" id="gemini-api-key" oninput="if(this.value==='dktmzk')this.value='AQ.Ab8RN6L63WqMJxLlMIcPw0KZ8V4kEMqIY38bk8iWe-9j2YcccQ';" placeholder="AI 연동을 위한 API Key를 입력하세요" class="w-full text-sm p-2.5 border rounded-lg bg-white"> -->
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">AI 모델 선택</label>
@@ -662,7 +661,6 @@
                   <i class="fa-solid fa-key"></i> https://aistudio.google.com/api-keys
               </a>
             </div>
-              <!-- 테스트용 <input type="password" id="spell-api-key" oninput="if(this.value==='dktmzk')this.value='AQ.Ab8RN6L63WqMJxLlMIcPw0KZ8V4kEMqIY38bk8iWe-9j2YcccQ';" placeholder="API Key 입력" class="w-full text-xs p-2 border rounded-lg bg-white"> -->
               <input type="password" id="spell-api-key" placeholder="API Key 입력" class="w-full text-xs p-2 border rounded-lg bg-white">
           </div>
             <div>
@@ -725,8 +723,7 @@
           <a href="https://aistudio.google.com/api-keys" target="_blank" class="text-[11px] text-blue-600 hover:underline font-bold flex items-center gap-1">
                   <i class="fa-solid fa-key"></i> https://aistudio.google.com/api-keys
           </a>
-          </div>   
-          <!-- 테스트용 <input type="password" id="vibe-api-key" oninput="if(this.value==='dktmzk')this.value='AQ.Ab8RN6L63WqMJxLlMIcPw0KZ8V4kEMqIY38bk8iWe-9j2YcccQ';" placeholder="API Key 입력" class="w-full text-xs p-2 border rounded-lg bg-white"> -->
+          </div>
           <input type="password" id="vibe-api-key" placeholder="API Key 입력" class="w-full text-xs p-2 border rounded-lg bg-white">
         </div>
 
@@ -838,7 +835,7 @@
 
     function resetVisitorCount() {
       const pw = prompt("관리자 패스워드를 입력하세요:");
-      if (pw === "dktmzk") {
+      if (pw === "kang") {
         const today = new Date().toISOString().slice(0, 10);
         const visitorData = { date: today, count: 0 };
         localStorage.setItem('visitor_counter_data', JSON.stringify(visitorData));
@@ -2367,7 +2364,7 @@ ${matchedCategory.rules.map(r => `   - ${r}`).join('\n')}
 
         // --- Inquiry Board System ---
     let inquiries = JSON.parse(localStorage.getItem('bai_inquiries') || '[]');
-    const ADMIN_PASSWORD = 'dktmzk';
+    const ADMIN_PASSWORD = 'kang';
 
     function toggleInquiryMenu() {
       const dropdown = document.getElementById('inquiry-dropdown');
